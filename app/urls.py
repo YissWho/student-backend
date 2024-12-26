@@ -9,7 +9,8 @@ urlpatterns = [
     path('common/classes/', all_views.get_all_classes),  # 获取所有班级
     path('common/teachers/', all_views.get_all_teachers),  # 获取所有教师
     path('common/teacher/<int:teacher_id>/classes/', all_views.get_teacher_classes),  # 获取教师管理的班级
-    
+    # 刷新token,待实现
+    path('common/refresh/token/', all_views.refresh_token),  # 刷新token
     # 学生相关
     path('student/login/', student_auth.student_login),
     path('student/register/', student_auth.student_register),

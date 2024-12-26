@@ -1,0 +1,130 @@
+{
+    "language": "python",
+    "framework": "django-rest-framework",
+    "rules": {
+        "imports": {
+            "required": [
+                "from rest_framework import status",
+                "from rest_framework.response import Response",
+                "from rest_framework.decorators import api_view, permission_classes"
+            ],
+            "suggestions": [
+                "from rest_framework.permissions import IsAuthenticated, AllowAny",
+                "from rest_framework.pagination import PageNumberPagination"
+            ]
+        },
+        "response_format": {
+            "success": {
+                "status": "success",
+                "code": 200,
+                "message": "操作成功",
+                "data": null
+            },
+            "error": {
+                "status": "false",
+                "code": "错误码",
+                "message": "错误信息"
+            }
+        },
+        "code_style": {
+            "function_decorators": [
+                "@api_view(['GET', 'POST', 'PUT', 'DELETE'])",
+                "@permission_classes([IsAuthenticated])"
+            ],
+            "serializer_naming": "{Model}Serializer",
+            "view_naming": "{action}_{model}",
+            "pagination": {
+                "page_size": 10,
+                "max_page_size": 50,
+                "page_size_query_param": "page_size"
+            }
+        },
+        "error_codes": {
+            "400": "请求参数错误",
+            "401": "未认证或认证已过期",
+            "403": "权限不足",
+            "404": "资源不存在",
+            "500": "服务器内部错误"
+        },
+        "file_structure": {
+            "models": "app/models.py",
+            "serializers": "app/serializers/",
+            "views": "app/views/",
+            "urls": "app/urls.py",
+            "utils": "app/utils/"
+        },
+        "naming_conventions": {
+            "class": "PascalCase",
+            "function": "snake_case",
+            "variable": "snake_case",
+            "constant": "UPPER_CASE",
+            "url_path": "kebab-case"
+        },
+        "documentation": {
+            "required": true,
+            "format": {
+                "function": "\"\"\"简要说明\n\n详细说明（可选）\n\nArgs:\n    参数说明\n\nReturns:\n    返回说���\n\"\"\"",
+                "class": "\"\"\"类的简要说明\n\n详细说明（可选）\n\nAttributes:\n    属性说明\n\"\"\""
+            }
+        },
+        "security": {
+            "authentication_required": true,
+            "default_permission_classes": ["IsAuthenticated"],
+            "token_auth": {
+                "type": "JWT",
+                "header": "Authorization",
+                "prefix": "Bearer"
+            }
+        },
+        "custom_rules": {
+            "response_wrapper": true,
+            "pagination_required": true,
+            "error_handling_required": true,
+            "validation_required": true
+        },
+        "model_conventions": {
+            "timestamps": {
+                "created_at": "创建时间",
+                "updated_at": "更新时间"
+            },
+            "soft_delete": {
+                "is_deleted": "是否删除",
+                "deleted_at": "删除时间"
+            }
+        },
+        "serializer_conventions": {
+            "read_only_fields": [
+                "id",
+                "created_at",
+                "updated_at"
+            ],
+            "write_only_fields": [
+                "password"
+            ]
+        },
+        "view_conventions": {
+            "list": {
+                "methods": ["GET"],
+                "pagination": true,
+                "filtering": true,
+                "ordering": true
+            },
+            "create": {
+                "methods": ["POST"],
+                "validation": true
+            },
+            "retrieve": {
+                "methods": ["GET"],
+                "lookup_field": "id"
+            },
+            "update": {
+                "methods": ["PUT", "PATCH"],
+                "validation": true
+            },
+            "delete": {
+                "methods": ["DELETE"],
+                "soft_delete": true
+            }
+        }
+    }
+}

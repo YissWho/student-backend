@@ -28,7 +28,7 @@ def chat_with_ai(request):
         messages = [
             {
                 "role": "user",
-                "content": message
+                "content": message + "请用一句话回答我"
             }
         ]
         

@@ -1,113 +1,161 @@
-# 应届生去向管理系统后端文档
+# 应届生就业管理系统
+
+基于 Django REST Framework 开发的应届生就业管理系统后端 API。
 
 ## 技术栈
 
-### 核心框架
 - Python 3.8+
 - Django 5.1.3
 - Django REST Framework 3.15.2
-- Django Simple JWT 5.3.1
-- Django Redis 5.4.0
+- MySQL 8.0
+- Redis 5.2.0
+- JWT 认证
+- SimpleUI 管理后台
 
-### 数据库
-- SQLite 3
+## 项目结构
 
-### 缓存
-- Redis 5.0.1
-
-### API文档
-- drf-yasg 1.21.8 (Swagger/OpenAPI)
-
-### 其他依赖
-- Pillow 11.0.0 (图片处理)
-- captcha 0.5.0 (验证码生成)
-- requests 2.32.3 (HTTP客户端)
-
-## 系统架构
-
-### 整体架构
-- 采用前后端分离架构
-- RESTful API设计
-- JWT认证机制
-- Redis缓存层
-- 文件存储系统
-
-### 目录结构
 ```
-app/
-├── models/             # 数据模型
-├── views/             # 视图函数
-│   ├── stu/          # 学生相关视图
-│   ├── teacher/      # 教师相关视图
-│   └── all/          # 公共视图
-├── serializers/       # 序列化器
-├── utils/            # 工具类
-├── urls.py           # URL配置
-└── apps.py           # 应用配置
+d1/
+├── app/                    # 主应用目录
+│   ├── migrations/        # 数据库迁移文件
+│   ├── serializers/       # 序列化器
+│   │   ├── student.py     # 学生相关序列化器
+│   │   ├── teacher.py     # 教师相关序列化器
+│   │   ├── notice.py      # 通知相关序列化器
+│   │   ├── survey.py      # 问卷相关序列化器
+│   │   └── teacher_manage.py  # 教师管理相关序列化器
+│   ├── utils/            # 工具类
+│   │   ├── captcha.py     # 验证码工具
+│   │   ├── ernie_bot.py   # 百度文心一言 AI 工具
+│   │   └── exception_handler.py  # 异常处理器
+│   ├── views/            # 视图目录
+│   │   ├── all/          # 公共视图
+│   │   ├── stu/          # 学生相���视图
+│   │   └── teacher/      # 教师相关视图
+│   ├── models.py         # 数据模型
+│   └── urls.py           # URL 配置
+├── d1/                    # 项目配置目录
+│   ├── settings.py       # 项目设置
+│   └── urls.py           # 主 URL 配置
+└── requirements.txt       # 项目依赖
 ```
 
-## 核心功能模块
+## 功能模块
 
-### 1. 用户认证模块
-- JWT Token认证
-- 验证码登录
-- 密码加密存储
-- 用户角色权限控制
+### 1. 认证模块
 
-### 2. 应届生管理模块
-- 学生信息CRUD
-- 班级管理
-- 学生统计
-- 批量导入导出
+#### 1.1 验证码（app/utils/captcha.py）
+- 生成图片验证码
+- 验证码存储与验证
+- 支持自定义过期时间
 
-### 3. 问卷调查模块
-- 问卷创建和管理
-- 答卷提交和统计
-- 条件性问题
-- 数据分析
+#### 1.2 用户认证
+- JWT Token 认证（access token + refresh token）
+- Token 刷新机制
+- 手机号/学号 + 密码登录
+- 验证码校验
 
-### 4. 通知公告模块
-- 通知发布
-- 阅读状态追踪
-- 消息提醒
+### 2. 学生模块（app/views/stu/）
 
-### 5. AI咨询模块
-- 文心一言API集成
-- 智能问答
-- 就业建议
-- 升学指导
+#### 2.1 账户管理（auth.py）
+- 学生注册
+- 学生登录
+- 密码修改
 
-### 6. 数据统计模块
-- 就业数据统计
-- 地区分布分析
-- 可视化图表
+#### 2.2 个人信息（student.py）
+- 获取/更新个人信息
+- 头像上传
+- 就业/升学状态管理
+- 意向省份/城市选择
 
-## API接口规范
+#### 2.3 通知管理（notice.py）
+- 查看通知列表
+- 标记通知已读
+- 未读通知统计
+- 通知筛选（已读/未读）
 
-### 请求格式
-```http
-POST /api/endpoint/
-Content-Type: application/json
-Authorization: Bearer <token>
+#### 2.4 问卷管理（survey.py）
+- 查看可用问卷
+- 提交问卷答复
+- 查看问卷状态
 
-{
-    "key": "value"
-}
-```
+#### 2.5 AI 咨询（ai_consultant.py）
+- 智能就业咨询
+- 基于文心一言的对话系统
+- 个性化建议生成
 
-### 响应格式
+### 3. 教师模块（app/views/teacher/）
+
+#### 3.1 账户管理（auth.py）
+- 教师登录
+- 密码修改
+
+#### 3.2 个人信息（profile.py）
+- 获取/更新个人信息
+- 头像管理
+
+#### 3.3 班级管理（manage_class.py）
+- 创建/编辑/删除班级
+- 班级学生管理
+- 班级列表查询
+
+#### 3.4 学生管理（manage.py）
+- 学生信息管理
+- 学生状态管理
+- 批量导入学生
+
+#### 3.5 通知管理（manage_notice.py）
+- 发布/编辑/删除通知
+- 查看通知阅读状态
+- 通知发送记录
+
+#### 3.6 问卷管理（survey.py）
+- 问卷统计分析
+- 查看问卷详情
+- 导出问卷数据
+
+#### 3.7 数据统计（statistics.py）
+- 班级人数统计
+- 就业率统计
+- 地区分布统计
+- 数据可视化
+
+### 4. 公共模块（app/views/all/）
+
+#### 4.1 基础数据
+- 获取班级列表
+- 获取教师列表
+- 获取验证码
+
+#### 4.2 Token 管理
+- Token 刷新
+- Token 验证
+
+### 5. 数据模型（app/models.py）
+
+#### 5.1 用户模型
+- Teacher：教师模型
+- Student：学生模型
+- Class：班级模型
+
+#### 5.2 业务模型
+- Notice：通知模型
+- Survey：问卷模型
+- SurveyResponse：问卷回答模型
+
+## API 响应规范
+
+### 成功响应
 ```json
 {
     "status": "success",
     "code": 200,
     "message": "操作成功",
-    "data": {
-        // 响应数据
-    }
+    "data": null
 }
 ```
 
-### 错误处理
+### 错误响应
 ```json
 {
     "status": "false",
@@ -116,76 +164,71 @@ Authorization: Bearer <token>
 }
 ```
 
-## 安全机制
+## 错误码说明
 
-### 1. 身份认证
-- JWT Token认证
-- Token过期机制
-- 刷新Token
+- 400：请求参数错误
+- 401：未认证或认证已过期
+- 403：权限不足
+- 404：资源不存在
+- 500：服务器内部错误
 
-### 2. 数据安全
-- 密码加密存储
-- 验证码机制
-- XSS防护
-- CORS配置
+## 安装部署
 
-### 3. 访问控制
-- 基于角色的权限控制
-- API访问限制
-- 敏感数据过滤
+1. 克隆项目
+```bash
+git clone <项目地址>
+```
 
-## 缓存策略
+2. 安装依赖
+```bash
+pip install -r requirements.txt
+```
 
-### Redis缓存
-- 验证码缓存
-- 用户信息缓存
-- 接口数据缓存
+3. 配置数据库
+```python
+# d1/settings.py
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'graduate',
+        'USER': 'root',
+        'PASSWORD': '123456',
+        'HOST': 'localhost',
+        'PORT': '3306',
+    }
+}
+```
 
-## 开发规范
+4. 配置 Redis
+```python
+# d1/settings.py
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
+```
 
-### 1. 代码规范
-- PEP 8 Python代码规范
-- RESTful API设计规范
-- 统一的响应格式
+5. 运行迁移
+```bash
+python manage.py migrate
+```
 
-### 2. 命名规范
-- 类名：大驼峰命名
-- 函数名：小写下划线
-- 变量名：小写下划线
-- 常量名：大写下划线
+6. 创建超级用户
+```bash
+python manage.py createsuperuser
+```
 
-### 3. 注释规范
-- 类注释：描述类的功能和用途
-- 函数注释：描述参数和返回值
-- 关键代码注释：解释复杂逻辑
+7. 启动服务
+```bash
+python manage.py runserver
+```
 
-## 部署要求
+## 作者
 
-### 环境要求
-- Python 3.8+
-- Redis 6.0+
-- SQLite 3
-
-### 配置说明
-1. 数据库配置
-2. Redis配置
-3. 文心一言API配置
-4. 跨域配置
-5. 媒体文件配置
-
-## 性能优化
-
-### 1. 数据库优化
-- 合理的索引设计
-- 查询语句优化
-- 分页加载
-
-### 2. 缓存优化
-- 合理的缓存策略
-- 缓存失效机制
-- 缓存预热
-
-### 3. 接口优化
-- 数据序列化优化
-- 异步处理
-- 批量操作
+- 作者：[杨海浪]
+- 邮箱：202162238@huat.edu.cn 

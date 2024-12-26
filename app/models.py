@@ -351,5 +351,3 @@ class SurveyResponse(models.Model):
 
     def __str__(self):
         return f"{self.student.username}的问卷回答"
-
-

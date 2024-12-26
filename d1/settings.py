@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-4ukn5#eiz*668*(&37^h#355jprt5fq5!&k^6lo&p_@gd8oo$*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -83,12 +83,28 @@ WSGI_APPLICATION = 'd1.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+""" 本地开发使用sqlite3 """
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
-}
+} 
+
+
+
+""" 线上开发使用mysql """
+""" DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'graduate',
+        'USER': 'root',
+        'PASSWORD': '123456',
+        'HOST': 'localhost',
+        'PORT': '3306',
+    }
+} """
 
 
 # Password validation
