@@ -31,40 +31,40 @@ def student_list(request):
     """获取教师管理的学生列表"""
     try:
         teacher = Teacher.objects.get(phone=request.user.username)
-        
+
         # 获取查询参数
         classs = request.query_params.get('class')
         status = request.query_params.get('status')
         search = request.query_params.get('search', '')
-        
+
         # 基础查询：获取该教师所有班级的学生
         students = Student.objects.filter(classs__teacher=teacher)
-        
+
         # 按班级筛选
         if classs:
             students = students.filter(classs_id=classs)
-            
+
         # 按状态筛选
         if status is not None:
             students = students.filter(status=status)
-            
+
         # 模糊查询
         if search:
             students = students.filter(
                 Q(student_no__icontains=search) |
                 Q(username__icontains=search)
             )
-            
+
         # 排序
         students = students.order_by('student_no')
-        
+
         # 分页
         paginator = StudentPagination()
         paginated_students = paginator.paginate_queryset(students, request)
         serializer = StudentManageSerializer(paginated_students, many=True)
-        
+
         return paginator.get_paginated_response(serializer.data)
-        
+
     except Teacher.DoesNotExist:
         return Response({
             'status': 'false',
